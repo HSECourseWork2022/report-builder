@@ -4,6 +4,7 @@ import dev.hse.template.cryptocurrency.dto.CryptocurrencyDTO;
 import dev.hse.template.cryptocurrency.dto.PriceStatsDTO;
 import dev.hse.template.cryptocurrency.dto.VendorDTO;
 import dev.hse.template.cryptocurrency.service.CryptocurrencyService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/")
+@RequiredArgsConstructor
 public class CryptocurrencyController {
 
-    CryptocurrencyService cryptocurrencyService;
+    private final CryptocurrencyService cryptocurrencyService;
 
     @GetMapping("/vendors")
     public List<VendorDTO> getAllVendors() {
