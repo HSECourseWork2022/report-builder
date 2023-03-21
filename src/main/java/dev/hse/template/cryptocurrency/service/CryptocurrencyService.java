@@ -37,27 +37,14 @@ public class CryptocurrencyService {
     }
 
     public PriceStatsDTO getCryptocurrencyPriceStats(Long vendorId, String symbol, LocalDateTime fromDateTime, LocalDateTime toDateTime) {
-        var records = cryptocurrencyRepository.findAllBySymbolAndVendorAndObservedAtBetween(symbol, vendorId, fromDateTime, toDateTime);
-        var stats = records
+        var statistics = cryptocurrencyRepository.findAllBySymbolAndVendorAndObservedAtBetween(symbol, vendorId, fromDateTime, toDateTime)
                 .stream()
-                .map(rec -> PriceStatsDTO.builder()
-                        .minimumPrice(rec.getPriceUSD())
-                        .medianPrice(rec.getPriceUSD())
-                        .maximumPrice(rec.getPriceUSD())
-                        .build())
-                .reduce((acc, rec) -> PriceStatsDTO.builder()
-                        .minimumPrice(Math.min(acc.getMinimumPrice(), rec.getMinimumPrice()))
-                        .medianPrice(acc.getMedianPrice() + rec.getMedianPrice())
-                        .maximumPrice(Math.max(acc.getMaximumPrice(), rec.getMaximumPrice()))
-                        .build())
-                .orElse(PriceStatsDTO.builder()
-                        .minimumPrice(null)
-                        .medianPrice(null)
-                        .maximumPrice(null)
-                        .build());
-        if (stats.getMedianPrice() != null) {
-            stats.setMedianPrice(stats.getMedianPrice() / records.size());
-        }
-        return stats;
+                .mapToDouble(CryptocurrencyRecord::getPriceUSD)
+                .summaryStatistics();
+        return new PriceStatsDTO(
+                statistics.getMin(),
+                statistics.getMax(),
+                statistics.getAverage()
+        );
     }
 }
