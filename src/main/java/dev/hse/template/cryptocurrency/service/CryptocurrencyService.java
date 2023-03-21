@@ -9,6 +9,7 @@ import dev.hse.template.cryptocurrency.persistence.repository.CryptocurrencyRepo
 import dev.hse.template.cryptocurrency.persistence.repository.VendorRepository;
 import dev.hse.template.cryptocurrency.service.mapper.CryptocurrencyMapper;
 import dev.hse.template.cryptocurrency.service.mapper.VendorMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -16,15 +17,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CryptocurrencyService {
 
     private final CryptocurrencyRepository cryptocurrencyRepository;
     private final VendorRepository vendorRepository;
-
-    public CryptocurrencyService(CryptocurrencyRepository cryptocurrencyRepository, VendorRepository vendorRepository) {
-        this.cryptocurrencyRepository = cryptocurrencyRepository;
-        this.vendorRepository = vendorRepository;
-    }
 
     public List<VendorDTO> getAllVendors() {
         List<Vendor> vendors = vendorRepository.findAll();
